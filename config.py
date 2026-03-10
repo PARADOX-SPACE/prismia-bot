@@ -56,6 +56,11 @@ class ENVIRONMENT_VAR:
     def GUILD_DISCORD_SERVER_ID(self) -> int:
         """ID Discord сервера (по умолчанию 1374389368315449477)"""
         return int(get_env_variable("GUILD_DISCORD_SERVER_ID", "1374389368315449477"))
+    
+    @property
+    def COMMANDS_PREFIX(self) -> str:
+        """Префикс для команд бота (по умолчанию '$')"""
+        return get_env_variable("COMMANDS_PREFIX", "$")
 
 
 # # Инициализация класса

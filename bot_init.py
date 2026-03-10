@@ -1,1 +1,26 @@
-# init
+"""
+Этот модуль инициализирует бота для работы с Discord.
+Настроены необходимые параметры для запуска и обработки команд.
+"""
+
+import disnake
+from disnake.ext import commands
+
+from config import ENVIRONMENT_VAR
+
+# Менеджер для доступа к переменным окружения
+env_cfg = ENVIRONMENT_VAR()
+
+# Инициализация бота с необходимыми интентами и параметрами
+intents = disnake.Intents.all()
+intents.message_content = True
+intents.members = True
+intents.voice_states = True
+intents.guilds = True
+bot = commands.Bot(
+    command_prefix=env_cfg.COMMANDS_PREFIX,
+    help_command=None,
+    intents=intents,
+    sync_commands=True,
+    test_guilds=[env_cfg.GUILD_DISCORD_SERVER_ID]
+)
