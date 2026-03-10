@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  prismia-bot:
+    build: .
+    container_name: prismia-bot
+    restart: unless-stopped
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - BOT_PREFIX=${BOT_PREFIX}
+    volumes:
+      - ./config.py:/app/config.py
+    networks:
+      - prismia-net
+
+networks:
+  prismia-net:
+    driver: bridge
