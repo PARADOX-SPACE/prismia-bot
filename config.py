@@ -61,6 +61,16 @@ class ENVIRONMENT_VAR:
     def COMMANDS_PREFIX(self) -> str:
         """Префикс для команд бота (по умолчанию '$')"""
         return get_env_variable("COMMANDS_PREFIX", "$")
+    
+    @property
+    def HTTP_SERVER_PORT(self) -> int:
+        """Порт для HTTP сервера (по умолчанию 9010)"""
+        return int(get_env_variable("HTTP_SERVER_PORT", "9010"))
+    
+    @property
+    def HTTP_SERVER_TOKEN(self) -> str:
+        """Токен для авторизации на HTTP сервере (по умолчанию 'my_secret_token_123')"""
+        return get_env_variable("HTTP_SERVER_TOKEN", "my_secret_token_123")
 
 
 # # Инициализация класса
