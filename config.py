@@ -71,6 +71,16 @@ class ENVIRONMENT_VAR:
     def HTTP_SERVER_TOKEN(self) -> str:
         """Токен для авторизации на HTTP сервере (по умолчанию 'my_secret_token_123')"""
         return get_env_variable("HTTP_SERVER_TOKEN", "my_secret_token_123")
+    
+    @property
+    def DISCORD_AUTH_USER_COOLDOWN_SECONDS(self) -> int:
+        """Cooldown для команд, связанных с привязкой аккаунта (по умолчанию 3600 секунд)"""
+        return int(get_env_variable("DISCORD_AUTH_USER_COOLDOWN_SECONDS", "3600"))
+    
+    @property
+    def DISCORD_AUTH_CHANNEL_ID(self) -> int:
+        """ID канала для команд привязки аккаунта (по умолчанию 1481280582368493761)"""
+        return int(get_env_variable("DISCORD_AUTH_CHANNEL_ID", "1481280582368493761"))
 
 
 # # Инициализация класса
