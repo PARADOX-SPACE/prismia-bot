@@ -35,7 +35,7 @@ class ENVIRONMENT_VAR:
     @property
     def DISCORD_TOKEN(self) -> str:
         """Токен Discord бота (обязательный)"""
-        return get_env_variable("DISCORD_TOKEN")
+        return get_env_variable("DISCORD_TOKEN", "NULL")
     
     @property
     def REPO_NAME(self) -> str:
