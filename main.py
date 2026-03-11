@@ -4,26 +4,31 @@
 
 import importlib
 import pkgutil
+from pathlib import Path
 
-from bot_init import bot, env_cfg
+from bot_init import bot, env_cfg, log
 
-def auto_import_modules(package):
-    """Автоматический импорт всех модулей из указанного пакета."""
-    package = importlib.import_module(package)
-    for _, module_name, is_pkg in pkgutil.iter_modules(package.__path__):
-        importlib.import_module(f"{package}.{module_name}")
+
+def load_modules(folder: str):
+    package = importlib.import_module(folder)
+    if not package.__file__:
+        return
+    dir_path = Path(package.__file__).parent
+    for _, mod_name, _ in pkgutil.iter_modules([str(dir_path)]):
+        importlib.import_module(f"{folder}.{mod_name}")
 
 if __name__ == "__main__":
     # Автоматический импорт всех модулей из папки "cogs"
-    auto_import_modules("commands")
-    auto_import_modules("events")
-    auto_import_modules("tasks")
-    auto_import_modules("modules")
+    load_modules('commands.misc')
+    # load_modules('commands.discord')
+    load_modules("events")
+    # load_modules("tasks")
+    # load_modules("modules")
     # . . .
     
     if env_cfg.DISCORD_TOKEN == "NULL":
-        print("КРИТИЧЕСКАЯ ОШИБКА: DISCORD_TOKEN не найден в переменных окружения!")
+        log.error("КРИТИЧЕСКАЯ ОШИБКА: DISCORD_TOKEN не найден в переменных окружения!")
         exit(1)
     else:
-        print("Запуск бота...")     
+        log.info("Запуск бота...")
         bot.run(env_cfg.DISCORD_BOT_TOKEN)
