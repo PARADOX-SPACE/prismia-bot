@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # load_modules('commands.discord')
     load_modules("events")
     # load_modules("tasks")
-    # load_modules("modules")
+    load_modules("modules")
     # . . .
     
     if env_cfg.DISCORD_TOKEN == "NULL":
