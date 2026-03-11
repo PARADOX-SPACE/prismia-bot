@@ -4,9 +4,10 @@
 """
 
 import json
+
 from aiohttp import web
 
-from bot_init import log, env_cfg
+from bot_init import env_cfg, log
 from data import save_user_data
 
 logger = log.getChild("http_server")

@@ -8,6 +8,7 @@ from disnake.ext import commands
 
 from config import ENVIRONMENT_VAR
 from logger import log_setup
+from modules.database_manager import DatabasePostgreSQLManagerSS14
 
 # Менеджер для доступа к переменным окружения
 env_cfg = ENVIRONMENT_VAR()
@@ -26,4 +27,8 @@ bot = commands.Bot(
     test_guilds=[env_cfg.GUILD_DISCORD_SERVER_ID]
 )
 
+# Инициализация логгера
 log = log_setup
+
+# Инициализация менеджера БД
+ss14_db = DatabasePostgreSQLManagerSS14()

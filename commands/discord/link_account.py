@@ -5,7 +5,7 @@ import disnake
 from disnake.ext import commands
 
 from bot_init import bot, env_cfg, log
-from data import get_user_data, delete_user_data
+from data import delete_user_data, get_user_data
 
 # Словарь для отслеживания времени последнего использования команды
 # Структура: { (channel_id, user_id): last_used_timestamp }

@@ -4,6 +4,7 @@
 
 import os
 
+import pytz
 from dotenv import load_dotenv
 
 # Загрузка переменных из .env файла
@@ -26,6 +27,8 @@ def get_env_variable(name: str, default: str = None) -> str:
 class ENVIRONMENT_VAR:
     """Класс для доступа к переменным окружения"""
     _instance = None
+
+    MOSCOW_TIMEZONE = pytz.timezone("Europe/Moscow")
     
     def __new__(cls):
         if cls._instance is None:
@@ -82,6 +85,31 @@ class ENVIRONMENT_VAR:
         """ID канала для команд привязки аккаунта (по умолчанию 1481280582368493761)"""
         return int(get_env_variable("DISCORD_AUTH_CHANNEL_ID", "1481280582368493761"))
 
+    @property
+    def POSTGRES_DATABASE(self) -> str:
+        """Название базы данных PostgreSQL (по умолчанию 'ss14_prod')"""
+        return get_env_variable("POSTGRES_DATABASE", "ss14_prod")
+    
+    @property
+    def POSTGRES_USER(self) -> str:
+        """Пользователь для подключения к PostgreSQL (по умолчанию 'postgres')"""
+        return get_env_variable("POSTGRES_USER", "postgres")
+    
+    @property
+    def POSTGRES_PASSWORD(self) -> str:
+        """Пароль для подключения к PostgreSQL (по умолчанию 'password')"""
+        return get_env_variable("POSTGRES_PASSWORD", "password")
+    
+    @property
+    def POSTGRES_HOST(self) -> str:
+        """Хост для подключения к PostgreSQL (по умолчанию 'localhost')"""
+        return get_env_variable("POSTGRES_HOST", "localhost")
+    
+    @property
+    def POSTGRES_PORT(self) -> int:
+        """Порт для подключения к PostgreSQL (по умолчанию 5432)"""
+        return int(get_env_variable("POSTGRES_PORT", "5432"))
+    
 
 # # Инициализация класса
 # env_cfg = ENVIRONMENT_VAR()
