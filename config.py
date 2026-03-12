@@ -29,6 +29,7 @@ class ENVIRONMENT_VAR:
     _instance = None
 
     MOSCOW_TIMEZONE = pytz.timezone("Europe/Moscow")
+    DISCORD_VERIFED_ROLE_ID = 1475930788225876212
     
     def __new__(cls):
         if cls._instance is None:

@@ -101,9 +101,6 @@ async def link_account(ctx, code: str):
     await tech_channel.send(
         f"✅ Успешная привязка: Discord {user.name} -> userId {user_id} (игрок: {userNamePlayer}, создан: {creation_date})"
     )
-
-    # ----------------------------------------
-    log.info(f"✅ [TODO] Привязка: Discord {discord_id} -> userId {user_id} с кодом {code}")
     
     # Удаляем данные из памяти после успешной привязки
     delete_user_data(user_id)
@@ -114,11 +111,14 @@ async def link_account(ctx, code: str):
         f"✅ {ctx.author.mention}, ваш аккаунт успешно привязан!"
     )
     
-    # Опционально: выдать роль (если нужно)
-    # role = ctx.guild.get_role(ROLE_ID)
-    # if role:
-    #     await ctx.author.add_roles(role, reason="Привязка аккаунта")
-
+    # Опционально: выдать роль
+    bot_guild = bot.get_guild(env_cfg.GUILD_DISCORD_SERVER_ID)
+    role = bot_guild.get_role(env_cfg.DISCORD_VERIFED_ROLE_ID)
+    if role:
+        await ctx.author.add_roles(role, reason="Привязка аккаунта")
+        log.info(f"🎖️ Роль успешно выдана пользователю {ctx.author}")
+    else:
+        log.error(f"❌ Роль с ID {env_cfg.DISCORD_VERIFED_ROLE_ID} не найдена на сервере {bot_guild.name}")
 
 @link_account.error
 async def link_account_error(ctx, error):
