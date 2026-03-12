@@ -55,12 +55,12 @@ class ENVIRONMENT_VAR:
     @property
     def LOG_TECH_CHANNEL(self) -> int:
         """ID канала для логов (по умолчанию 1374529148474622085)"""
-        return int(get_env_variable("LOG_TECH_CHANNEL", "1374529148474622085"))
+        return int(get_env_variable("LOG_TECH_CHANNEL", "1480936849408135351"))
     
     @property
-    def GUILD_DISCORD_SERVER_ID(self) -> int:
-        """ID Discord сервера (по умолчанию 1374389368315449477)"""
-        return int(get_env_variable("GUILD_DISCORD_SERVER_ID", "1374389368315449477"))
+    def GUILD_DISCORD_SERVER_ID(self) -> int: 
+        """ID Discord сервера (по умолчанию 1475918847759356117)"""
+        return int(get_env_variable("GUILD_DISCORD_SERVER_ID", "1475918847759356117"))
     
     @property
     def COMMANDS_PREFIX(self) -> str:
