@@ -4,8 +4,9 @@ from collections import defaultdict
 import disnake
 from disnake.ext import commands
 
-from bot_init import bot, env_cfg, log
+from bot_init import bot, env_cfg, log, ss14_db
 from data import delete_user_data, get_user_data
+from modules.get_creation_date import get_creation_date
 
 # Словарь для отслеживания времени последнего использования команды
 # Структура: { (channel_id, user_id): last_used_timestamp }
@@ -25,6 +26,7 @@ async def link_account(ctx, code: str):
     Команда доступна всем пользователям в специальном канале.
     Привязывает Discord ID к userId по коду.
     """
+    tech_channel = bot.get_channel(env_cfg.LOG_TECH_CHANNEL)
     
     # Проверка канала
     if ctx.channel.id != ALLOWED_CHANNEL_ID:
@@ -73,13 +75,33 @@ async def link_account(ctx, code: str):
     
     discord_id = ctx.author.id
     user_id = found_user_id
+
+
+    if ss14_db.is_user_linked(user_id, discord_id):
+        log.warn(f"⚠️ Пользователь {ctx.author} уже привязан к userId {user_id}")
+        await tech_channel.send(
+            f"⚠️ Пользователь {ctx.author} уже привязан к userId {user_id} (код: {code})"
+        )
+        return
+
+    player_data = ss14_db.fetch_player_data_by_user_id(user_id)
+    if not player_data:
+        await tech_channel.send(
+            f"⚠️ Не найден игрок с userId {user_id} для Discord {ctx.author} (код: {code})"
+        )
+        return
     
-    # TODO: Здесь будет запись в PostgreSQL
-    # ----------------------------------------
-    # 1. Импортировать модуль для работы с БД (например, db.py)
-    # 2. Вызвать функцию сохранения связи:
-    #    await save_discord_link(discord_id, user_id, code)
-    # 3. Обработать возможные ошибки
+    creation_date = get_creation_date(user_id)
+
+    ss14_db.link_user_to_discord(user_id, discord_id)
+
+    user = await bot.fetch_user(discord_id)
+    userNamePlayer = ss14_db.get_username_by_user_id(user_id)
+    log.info(f"✅ Успешная привязка: Discord {user.name} -> userId {user_id} (игрок: {userNamePlayer}, создан: {creation_date})")
+    await tech_channel.send(
+        f"✅ Успешная привязка: Discord {user.name} -> userId {user_id} (игрок: {userNamePlayer}, создан: {creation_date})"
+    )
+
     # ----------------------------------------
     log.info(f"✅ [TODO] Привязка: Discord {discord_id} -> userId {user_id} с кодом {code}")
     

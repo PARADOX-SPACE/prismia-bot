@@ -246,6 +246,51 @@ class DatabasePostgreSQLManagerSS14:
 
         return result
 
+    def fetch_player_data_by_user_id(self, user_id, db_name='main'):
+        """
+        Поиск данных игрока по ID пользователя в основной базе или логах подключений.
+        
+        Parameters
+        ----------
+        user_id : str
+            ID пользователя для поиска
+        db_name : str, optional
+            Имя базы данных для подключения: 
+            - 'main' - основная база (по умолчанию)
+            - 'dev' - база разработки
+        
+        Returns
+        ----------
+        tuple or None
+            Возвращает кортеж с данными игрока в зависимости от места нахождения:
+            - Если найден в таблице player: 
+            (player_id, user_id, first_seen_time, last_seen_user_name)
+            - Если найден в таблице connection_log:
+            (connection_log_id, user_id, user_name)
+            - None если игрок не найден ни в одной таблице
+        """
+        with self._get_connection(db_name) as conn:
+            with conn.cursor() as cursor:
+                query = """
+                SELECT player_id, user_id, first_seen_time, last_seen_user_name
+                FROM player
+                WHERE user_id = %s
+                """
+                cursor.execute(query, (user_id,))
+                result = cursor.fetchone()
+
+                # Если не нашли в player, ищем в connection_log
+                if result is None:
+                    query = """
+                    SELECT connection_log_id, user_id, user_name
+                    FROM connection_log
+                    WHERE user_id = %s
+                    """
+                    cursor.execute(query, (user_id,))
+                    result = cursor.fetchone()
+
+        return result
+
 
     def is_user_linked(self, user_id, discord_id, db_name='main'):
         """
