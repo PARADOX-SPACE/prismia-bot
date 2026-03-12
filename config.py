@@ -30,6 +30,7 @@ class ENVIRONMENT_VAR:
 
     MOSCOW_TIMEZONE = pytz.timezone("Europe/Moscow")
     DISCORD_VERIFED_ROLE_ID = 1475930788225876212
+    MY_USER_ID = 328502766622474240
     
     def __new__(cls):
         if cls._instance is None:
@@ -111,6 +112,22 @@ class ENVIRONMENT_VAR:
         """Порт для подключения к PostgreSQL (по умолчанию 5432)"""
         return int(get_env_variable("POSTGRES_PORT", "5432"))
     
+
+    ROLE_WHITELISTS = {
+        # Ключи ID ролей для вайтлистов
+        # "whitelist_role_id": [
+        #     1060191651538145420,  # Разработка
+        #     1347877224430436493,  # Глава проекта
+        #     1060264704838209586,  # Куратор Проекта
+        #     1054908932868538449,  # Руководитель проекта
+        #     1054827766211694593,  # Админ
+        #     1127152229439246468,  # Зам. создателя проекта
+        #     1266161300036390913,  # Руководство отдела разработки
+        # ],
+        "head_team": [
+            1475921449121485065,  # Глава проекта
+        ],
+    }
 
 # # Инициализация класса
 # env_cfg = ENVIRONMENT_VAR()
