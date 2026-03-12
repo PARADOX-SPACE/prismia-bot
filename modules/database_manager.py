@@ -4,8 +4,9 @@ from datetime import datetime
 import disnake
 import psycopg2
 
-from bot_init import env_cfg
+from config import ENVIRONMENT_VAR
 
+env_cfg = ENVIRONMENT_VAR()
 DB_DATABASE = env_cfg.POSTGRES_DATABASE
 DB_HOST = env_cfg.POSTGRES_HOST
 DB_PASSWORD = env_cfg.POSTGRES_PASSWORD
