@@ -23,6 +23,7 @@ bot = commands.Bot(
     command_prefix=env_cfg.COMMANDS_PREFIX,
     help_command=None,
     intents=intents,
+    command_sync_flags=commands.CommandSyncFlags.default(),
     sync_commands=True,
     test_guilds=[env_cfg.GUILD_DISCORD_SERVER_ID]
 )
