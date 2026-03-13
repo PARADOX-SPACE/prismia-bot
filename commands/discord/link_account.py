@@ -122,15 +122,6 @@ async def link_account(ctx, code: str):
     else:
         log.error(f"❌ Роль с ID {env_cfg.DISCORD_VERIFED_ROLE_ID} не найдена на сервере {bot_guild.name}")
 
-@link_account.error
-async def link_account_error(ctx, error):
-    """Обработчик ошибок"""
-    if isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(f"❌ {ctx.author.mention}, укажите код. Пример: `!link ABC123`", delete_after=15)
-    else:
-        log.error(f"Ошибка в команде link: {error}")
-        await ctx.send("❌ Произошла ошибка при выполнении команды.", delete_after=10)
-
 
 @bot.command()
 @has_any_role_by_keys("whitelist_role_id_administration_post", "general_adminisration_role")
@@ -226,3 +217,15 @@ async def unlink_dis(
         message += f"❌ Привязка для {discord.mention} не найдена.\n"
 
     await inter.response.send_message(message)
+
+@link_account.error
+async def link_account_error(ctx, error):
+    """Обработчик ошибок"""
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send(f"❌ {ctx.author.mention}, укажите код. Пример: `!link ABC123`", delete_after=15)
+    else:
+        log.error(f"Ошибка в команде link: {error}")
+        await ctx.send("❌ Произошла ошибка при выполнении команды.", delete_after=10)
+
+
+
