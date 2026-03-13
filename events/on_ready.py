@@ -17,7 +17,7 @@ async def on_ready():
     """
     Событие, которое выполняется при запуске бота.
     """
-    await bot.sync_commands() # Синхронизация команд при запуске
+    # await bot.sync_commands() # Синхронизация команд при запуске
 
     guild_names = [guild.name for guild in bot.guilds]
     log.info("✅ Connected to Discord successfully.")
