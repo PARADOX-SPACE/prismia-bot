@@ -6,7 +6,7 @@ from disnake import Option
 from disnake.ext import commands
 
 from bot_init import bot, env_cfg, log, ss14_db
-from data import delete_user_data, get_user_data
+from data import delete_user_data, get_user_data, get_all_data
 from modules.check_roles import has_any_role_by_keys
 from modules.get_creation_date import get_creation_date
 
@@ -60,7 +60,7 @@ async def link_account(ctx, code: str):
     found_user_id = None
     
     # Проходим по всем данным в памяти
-    all_data = get_user_data()  # возвращает весь словарь
+    all_data = get_all_data()  # возвращает весь словарь
     for user_id, data in all_data.items():
         if data.get("code") == code:
             user_data = data
