@@ -23,8 +23,8 @@ bot = commands.Bot(
     command_prefix=env_cfg.COMMANDS_PREFIX,
     help_command=None,
     intents=intents,
-    command_sync_flags=commands.CommandSyncFlags.default(),
-    test_guilds=[env_cfg.GUILD_DISCORD_SERVER_ID]
+    test_guilds=[1475918847759356117],
+    sync_commands=True,
 )
 
 # Инициализация логгера
