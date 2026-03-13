@@ -32,7 +32,7 @@ Prismia — это многофункциональный Discord-бот для 
    cd prismia-bot
    ```
 
-2. **Создай файл `.env`** (скопируй из `.env.example`)
+2. **Создай файл `.env`**
    ```ini
    DISCORD_TOKEN=your_token_here
    BOT_PREFIX=!
@@ -42,7 +42,6 @@ Prismia — это многофункциональный Discord-бот для 
    POSTGRES_PASSWORD=password
    POSTGRES_HOST=postgres
    POSTGRES_PORT=5432
-   TIMEZONE=Europe/Moscow
    ```
 
 3. **Запусти через Docker Compose**
