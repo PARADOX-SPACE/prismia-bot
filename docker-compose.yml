@@ -5,6 +5,8 @@ services:
     build: .
     container_name: prismia-bot
     restart: unless-stopped
+    ports:
+      - "9010:9010"
     volumes:
       - ./config.py:/app/config.py
     networks:
