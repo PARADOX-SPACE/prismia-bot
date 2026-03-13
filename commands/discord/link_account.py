@@ -62,7 +62,7 @@ async def link_account(ctx, code: str):
     # Проходим по всем данным в памяти
     all_data = get_all_data()  # возвращает весь словарь
     for user_id, data in all_data.items():
-        if data.get("code") == code:
+        if int(data.get("code")) == int(code):
             user_data = data
             found_user_id = user_id
             break

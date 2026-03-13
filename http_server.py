@@ -69,5 +69,5 @@ async def handle_post(request):
 async def init_http_server():
     """Инициализация HTTP-сервера"""
     app = web.Application()
-    app.router.add_post('/auth', handle_post) # TODO: поправить роут
+    app.router.add_post('/auth', handle_post)
     return app
