@@ -146,7 +146,7 @@ async def get_ckey(ctx, discordUser: disnake.Member):
         await ctx.send(f"🚫 Ошибка при получении данных: `{str(e)}`")
         raise
 
-@bot.slash_command(name="dis_linc", description="Привязывает игрового пользователя к Discord.")
+@bot.slash_command(name="dis_linc", description="Привязывает игрового пользователя к Discord.", guild_ids=[env_cfg.GUILD_DISCORD_SERVER_ID])
 @has_any_role_by_keys("head_team")
 async def linc_dis(
     inter: disnake.ApplicationCommandInteraction,
@@ -196,7 +196,7 @@ async def linc_dis(
     )
 
 
-@bot.slash_command(name="dis_unlink", description="Удаляет привязку Discord-аккаунта.")
+@bot.slash_command(name="dis_unlink", description="Удаляет привязку Discord-аккаунта.", guild_ids=[env_cfg.GUILD_DISCORD_SERVER_ID])
 @has_any_role_by_keys("head_team")
 async def unlink_dis(
     inter: disnake.ApplicationCommandInteraction,
