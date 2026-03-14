@@ -493,13 +493,9 @@ class DatabasePostgreSQLManagerSS14:
                     SELECT user_name
                     FROM connection_log
                     WHERE user_id = %s
-                    ORDER BY connection_time DESC
-                    LIMIT 1
                     """
                     cursor.execute(query, (user_id,))
                     result = cursor.fetchone()
-                    if result and result[0]:
-                        return result[0]
 
             return None
 
