@@ -9,15 +9,31 @@ code_index = {}
 
 def save_user_data(userId: str, code: str, token: str) -> bool:
     try:
+        code = str(code)
+
+        # Проверка: уже есть userId
+        if userId in memory_storage:
+            old_code = memory_storage[userId]["code"]
+            log.warning(f"⚠️ Перезапись данных для userId {userId} (старый код: {old_code}, новый код: {code})")
+
+            # удаляем старый индекс
+            if str(old_code) in code_index:
+                del code_index[str(old_code)]
+
+        # Проверка: код уже существует
+        if code in code_index:
+            old_user = code_index[code]
+            log.warning(f"⚠️ Код {code} уже был выдан userId {old_user}. Перезаписываем на {userId}")
+
+        # Сохраняем данные
         memory_storage[userId] = {
             "code": code,
             "token": token
         }
 
-        # индекс по коду
-        code_index[str(code)] = userId
+        code_index[code] = userId
 
-        log.info(f"✅ Данные сохранены для userId: {userId}")
+        log.info(f"✅ Данные сохранены для userId: {userId} (код: {code})")
         return True
 
     except Exception as e:
