@@ -458,40 +458,51 @@ class DatabasePostgreSQLManagerSS14:
 
     def get_username_by_user_id(self, user_id, db_name='main'):
         """
-        Получает последний известный никнейм игрока по его уникальному идентификатору.
-
-        Производит поиск в указанной базе данных в таблице player,
-        возвращая значение last_seen_user_name для заданного user_id.
+        Получает последний известный никнейм игрока по user_id.
+        Если пользователь не найден в таблице player, ищется в connection_log по user_name.
 
         Parameters
         ----------
         user_id : str
-            Уникальный идентификатор пользователя в системе.
-            Ожидается строковое значение, даже если ID числовой.
-        
+            Уникальный идентификатор пользователя.
         db_name : str, optional
-            Целевая база данных для поиска, по умолчанию 'main'.
-            Допустимые значения:
-            - 'main' - основная рабочая база данных
-            - 'dev' - тестовая база данных
+            База данных для поиска, по умолчанию 'main'.
 
         Returns
         -------
         str | None
-            - Последний известный никнейм пользователя в виде строки, если найден
-            - None, если пользователь не найден или произошла ошибка
+            Последний известный никнейм пользователя, либо None, если не найден.
         """
         try:
             with self._get_connection(db_name) as conn:
                 with conn.cursor() as cursor:
+                    # Сначала ищем в player
                     query = """
-                    SELECT last_seen_user_name 
-                    FROM player 
+                    SELECT last_seen_user_name
+                    FROM player
                     WHERE user_id = %s
                     """
                     cursor.execute(query, (user_id,))
                     result = cursor.fetchone()
-                    return result[0] if result else None
+
+                    if result and result[0]:
+                        return result[0]
+
+                    # Если не нашли, ищем в connection_log по user_id
+                    query = """
+                    SELECT user_name
+                    FROM connection_log
+                    WHERE user_id = %s
+                    ORDER BY connection_time DESC
+                    LIMIT 1
+                    """
+                    cursor.execute(query, (user_id,))
+                    result = cursor.fetchone()
+                    if result and result[0]:
+                        return result[0]
+
+            return None
+
         except psycopg2.Error as e:
             print(f"Ошибка при запросе к БД: {e}")
             return None
