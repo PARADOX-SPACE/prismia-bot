@@ -30,8 +30,7 @@ async def handle_request(inter, action: str):
 
         if response.status_code == 200:
             msg = (
-                f"✅ Запрос `{action}` отправлен.\n"
-                f"Ответ сервера:\n```{response.text}```"
+                f"✅ Запрос `{action}` отправлен."
             )
         else:
             msg = (
@@ -93,4 +92,3 @@ async def update_text(ctx: commands.Context):
 
     msg = await handle_request(ctx, "update")
     await ctx.send(msg)
-    
