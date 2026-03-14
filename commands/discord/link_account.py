@@ -6,7 +6,7 @@ from disnake import Option
 from disnake.ext import commands
 
 from bot_init import bot, env_cfg, log, ss14_db
-from data import delete_user_data, get_user_data, get_all_data
+from data import delete_user_data, get_user_by_code, get_user_data
 from modules.check_roles import has_any_role_by_keys
 from modules.get_creation_date import get_creation_date
 
@@ -60,20 +60,15 @@ async def link_account(ctx, code: str):
     found_user_id = None
     
     # Проходим по всем данным в памяти
-    all_data = get_all_data()  # возвращает весь словарь
-    for user_id, data in all_data.items():
-        if int(data.get("code")) == int(code):
-            user_data = data
-            found_user_id = user_id
-            break
-    
-    if not user_data or not found_user_id:
+    found_user_id = get_user_by_code(code)
+
+    if not found_user_id:
         log.warning(f"⚠️ Код {code} не найден (пользователь {ctx.author})")
         await ctx.send(
             f"❌ {ctx.author.mention}, код `{code}` не найден. Проверьте правильность ввода.",
             delete_after=15
         )
-        return
+        return    
     
     discord_id = ctx.author.id
     user_id = found_user_id
