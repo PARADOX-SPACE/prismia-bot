@@ -31,6 +31,8 @@ class ENVIRONMENT_VAR:
     MOSCOW_TIMEZONE = pytz.timezone("Europe/Moscow")
     DISCORD_VERIFED_ROLE_ID = 1475930788225876212
     MY_USER_ID = 328502766622474240
+    IP_HOST = "83.222.20.3"
+    NAME_INST = "paradox-inst"
     
     def __new__(cls):
         if cls._instance is None:
@@ -111,6 +113,10 @@ class ENVIRONMENT_VAR:
     def POSTGRES_PORT(self) -> int:
         """Порт для подключения к PostgreSQL (по умолчанию 5432)"""
         return int(get_env_variable("POSTGRES_PORT", "5432"))
+    
+    @property
+    def POST_REQUEST_WATCHDOG(self) -> str:
+        return get_env_variable("POST_REQUEST_WATCHDOG", "NULL")
     
 
     ROLE_WHITELISTS = {
