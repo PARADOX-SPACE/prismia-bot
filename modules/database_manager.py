@@ -459,46 +459,34 @@ class DatabasePostgreSQLManagerSS14:
     def get_username_by_user_id(self, user_id, db_name='main'):
         """
         Получает последний известный никнейм игрока по user_id.
-        Если пользователь не найден в таблице player, ищется в connection_log по user_name.
-
-        Parameters
-        ----------
-        user_id : str
-            Уникальный идентификатор пользователя.
-        db_name : str, optional
-            База данных для поиска, по умолчанию 'main'.
-
-        Returns
-        -------
-        str | None
-            Последний известный никнейм пользователя, либо None, если не найден.
+        Сначала ищется в player, если не найден — берём последнюю запись из connection_log.
         """
         try:
             with self._get_connection(db_name) as conn:
                 with conn.cursor() as cursor:
-                    # Сначала ищем в player
-                    query = """
-                    SELECT last_seen_user_name
-                    FROM player
-                    WHERE user_id = %s
-                    """
-                    cursor.execute(query, (user_id,))
+                    # 1. Сначала ищем в player
+                    cursor.execute("""
+                        SELECT last_seen_user_name
+                        FROM player
+                        WHERE user_id = %s
+                    """, (user_id,))
                     result = cursor.fetchone()
-
                     if result and result[0]:
                         return result[0]
 
-                    # Если не нашли, ищем в connection_log по user_id
-                    query = """
-                    SELECT user_name
-                    FROM connection_log
-                    WHERE user_id = %s
-                    """
-                    cursor.execute(query, (user_id,))
+                    # 2. Если не нашли, ищем последнюю запись в connection_log
+                    cursor.execute("""
+                        SELECT user_name
+                        FROM connection_log
+                        WHERE user_id = %s
+                        ORDER BY "time" DESC
+                        LIMIT 1
+                    """, (user_id,))
                     result = cursor.fetchone()
+                    if result and result[0]:
+                        return result[0]
 
             return None
-
         except psycopg2.Error as e:
             print(f"Ошибка при запросе к БД: {e}")
             return None
