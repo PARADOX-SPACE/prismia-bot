@@ -1,24 +1,28 @@
 import aiohttp
 from disnake import Embed
+from datetime import datetime, timezone
 
 from bot_init import bot, env_cfg
 
-embed_status = {
-    "title": "Статус сервера",
-    "color": 0x8000ff,
-    "fields": [
-        {"name": "Название", "value": "data['name']", "inline": False},
-        {"name": "Игроки", "value": "f\"{data['players']}/{data['soft_max_players']}\"", "inline": False},
-        {"name": "Карта", "value": "data['map']", "inline": False},
-        {"name": "Статус", "value": "'Раунд идёт' if data['run_level'] == 1 else 'Неизвестно'", "inline": False},
-        {"name": "Раунд ID", "value": "data['round_id']", "inline": False},
-    ]
-}
+
+def get_round_duration(start_time: str) -> str:
+    try:
+        start = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+        now = datetime.now(timezone.utc)
+        delta = now - start
+
+        minutes = int(delta.total_seconds() // 60)
+        seconds = int(delta.total_seconds() % 60)
+
+        return f"{minutes}м {seconds}с"
+    except Exception:
+        return "неизвестно"
 
 
 @bot.command(name="status")
 async def status_command(ctx, server: str = "mrp"):
-    '''Команда для получения информации о сервере'''
+    """Команда для получения информации о сервере"""
+
     if server.lower() == "mrp":
         address = env_cfg.IP_HOST
         port = "1212"
@@ -28,14 +32,45 @@ async def status_command(ctx, server: str = "mrp"):
     try:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-                if resp.status == 200:
-                    data = await resp.json()
 
-                    embed = Embed(title=embed_status["title"], color=embed_status["color"])
-                    for field in embed_status["fields"]:
-                        embed.add_field(name=field["name"], value=eval(field["value"]), inline=field["inline"])
-                    await ctx.send(embed=embed)
-                else:
+                if resp.status != 200:
                     await ctx.send(f"Ошибка: код {resp.status}")
+                    return
+
+                data = await resp.json()
+
+                round_time = get_round_duration(data["round_start_time"])
+
+                embed = Embed(
+                    title="Статус сервера",
+                    color=0x8000ff
+                )
+
+                embed.add_field(
+                    name="Название",
+                    value=data["name"],
+                    inline=False
+                )
+
+                embed.add_field(
+                    name="Игроки",
+                    value=f"{data['players']}/{data['soft_max_players']}",
+                    inline=False
+                )
+
+                embed.add_field(
+                    name="Раунд идёт",
+                    value=round_time,
+                    inline=False
+                )
+
+                embed.add_field(
+                    name="Раунд ID",
+                    value=data["round_id"],
+                    inline=False
+                )
+
+                await ctx.send(embed=embed)
+
     except Exception as e:
         await ctx.send(f"Ошибка: {e}")
