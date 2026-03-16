@@ -1,7 +1,7 @@
 import requests
-from requests.auth import HTTPBasicAuth
 from disnake import AppCommandInteraction
 from disnake.ext import commands
+from requests.auth import HTTPBasicAuth
 
 from bot_init import bot, env_cfg
 from modules.check_roles import has_any_role_by_keys
