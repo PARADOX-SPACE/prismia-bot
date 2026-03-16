@@ -1,7 +1,7 @@
 import aiohttp
-from bot_init import bot, env_cfg
 from disnake import Embed
 
+from bot_init import bot, env_cfg
 
 embed_status = {
     "title": "Статус сервера",
