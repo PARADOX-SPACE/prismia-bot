@@ -1,48 +1,43 @@
-import requests
+import asyncio
+
+import aiohttp
 from disnake import AppCommandInteraction
 from disnake.ext import commands
-from requests.auth import HTTPBasicAuth
 
 from bot_init import bot, env_cfg
 from modules.check_roles import has_any_role_by_keys
 
 
-def send_instance_request(action: str):
-    """
-    Отправляет POST-запрос к watchdog API.
-
-    action: update | restart
-    """
+async def send_instance_request(action: str):
     url = f"http://{env_cfg.IP_HOST}:5000/instances/{env_cfg.NAME_INST}/{action}"
 
-    response = requests.post(
-        url,
-        auth=HTTPBasicAuth(env_cfg.NAME_INST, env_cfg.POST_REQUEST_WATCHDOG),
-        timeout=10
-    )
+    auth = aiohttp.BasicAuth(env_cfg.NAME_INST, env_cfg.POST_REQUEST_WATCHDOG)
 
-    return response
+    timeout = aiohttp.ClientTimeout(total=10)
+
+    async with aiohttp.ClientSession(timeout=timeout) as session:
+        async with session.post(url, auth=auth) as response:
+            text = await response.text()
+            return response.status, text
 
 
 async def handle_request(inter, action: str):
     try:
-        response = send_instance_request(action)
+        status, text = await send_instance_request(action)
 
-        if response.status_code == 200:
-            msg = (
-                f"✅ Запрос `{action}` отправлен."
-            )
+        if status == 200:
+            msg = f"✅ Запрос `{action}` отправлен."
         else:
             msg = (
                 f"⚠️ Сервер вернул ошибку.\n"
-                f"Status: **{response.status_code}**\n"
-                f"```{response.text}```"
+                f"Status: **{status}**\n"
+                f"```{text}```"
             )
 
-    except requests.Timeout:
+    except asyncio.TimeoutError:
         msg = "⏱ Сервер не ответил (timeout 10s)."
 
-    except requests.RequestException as e:
+    except aiohttp.ClientError as e:
         msg = f"❌ Ошибка запроса:\n```{e}```"
 
     return msg

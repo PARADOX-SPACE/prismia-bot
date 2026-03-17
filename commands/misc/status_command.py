@@ -1,9 +1,11 @@
+from datetime import datetime, timezone
+
 import aiohttp
 from disnake import Embed
-from datetime import datetime, timezone
 
 from bot_init import bot, env_cfg
 
+timeout = aiohttp.ClientTimeout(total=5)
 
 def get_round_duration(start_time: str) -> str:
     try:
@@ -30,7 +32,7 @@ async def status_command(ctx, server: str = "mrp"):
     url = f"http://{address}:{port}/status"
 
     try:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=timeout) as session:
             async with session.get(url) as resp:
 
                 if resp.status != 200:

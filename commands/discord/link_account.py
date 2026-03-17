@@ -88,7 +88,7 @@ async def link_account(ctx, code: str):
         )
         return
     
-    creation_date = get_creation_date(user_id)
+    creation_date = await get_creation_date(user_id)
 
     ss14_db.link_user_to_discord(user_id, discord_id)
 

@@ -3,4 +3,3 @@ aiohttp
 python-dotenv
 pytz
 psycopg2-binary
-requests

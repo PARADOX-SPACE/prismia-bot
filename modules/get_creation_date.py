@@ -1,29 +1,46 @@
+import asyncio
 from datetime import datetime
 
-import requests
+import aiohttp
 
 
-def get_creation_date(uuid):
+async def get_creation_date(uuid: str) -> str:
     """
-        используем апи визардов для отслеживание - когда была создана учётная запись
+    Получает дату создания аккаунта через API
     """
     url = f"https://auth.spacestation14.com/api/query/userid?userid={uuid}"
+
+    timeout = aiohttp.ClientTimeout(total=5)
+
     try:
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()  # Парсинг JSON
+        async with aiohttp.ClientSession(timeout=timeout) as session:
+            async with session.get(url) as response:
 
-        player_date = data.get('createdTime', 'Дата создания не найдена')
-        date_obj = datetime.fromisoformat(player_date)
-        creation_date_unix = int(date_obj.timestamp())  # Преобразование в Unix-время
+                if response.status != 200:
+                    return f"Ошибка API: {response.status}"
 
-        return f'<t:{creation_date_unix}:f>'  # Форматирование в метку времени Discord
+                data = await response.json()
 
-    except requests.exceptions.HTTPError as err:
-        return f"Ошибка при запросе API: {err}"
-    except requests.exceptions.RequestException as err:
-        return f"Ошибка соединения: {err}"
+                player_date = data.get("createdTime")
+                if not player_date:
+                    return "Дата создания не найдена"
+
+                date_obj = datetime.fromisoformat(
+                    player_date.replace("Z", "+00:00")
+                )
+
+                creation_date_unix = int(date_obj.timestamp())
+
+                return f"<t:{creation_date_unix}:f>"
+
+    except asyncio.TimeoutError:
+        return "⏱ Таймаут запроса"
+
+    except aiohttp.ClientError as e:
+        return f"Ошибка соединения: {e}"
+
     except ValueError:
-        return "Ошибка при разборе ответа API (неправильный формат JSON)"
-    except Exception as err:
-        return f"Произошла ошибка: {err}"
+        return "Ошибка при разборе даты"
+
+    except Exception as e:
+        return f"Неизвестная ошибка: {e}"

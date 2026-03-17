@@ -1,10 +1,12 @@
+from datetime import datetime, timezone
+
 import aiohttp
 from disnake import Game
 from disnake.ext import tasks
-from datetime import datetime, timezone
 
 from bot_init import bot, env_cfg, log
 
+timeout = aiohttp.ClientTimeout(total=5)
 
 def get_round_duration(start_time: str) -> str:
     """Возвращает длительность раунда."""
@@ -28,7 +30,7 @@ async def monitor_status_ss14():
     url = f"http://{env_cfg.IP_HOST}:1212/status"
 
     try:
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=timeout) as session:
             async with session.get(url) as resp:
                 if resp.status == 200:
                     data = await resp.json()
