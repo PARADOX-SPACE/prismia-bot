@@ -5,7 +5,12 @@
 
 import logging
 import sys
+from datetime import datetime
 from pathlib import Path
+
+import pytz
+
+MOSCOW_TIMEZONE = pytz.timezone("Europe/Moscow")
 
 
 class Colors:
@@ -30,6 +35,12 @@ class ColoredFormatter(logging.Formatter):
         logging.ERROR: Colors.RED,
         logging.CRITICAL: Colors.BOLD + Colors.RED
     }
+
+    def formatTime(self, record, datefmt=None):
+        dt = datetime.fromtimestamp(record.created, tz=MOSCOW_TIMEZONE)
+        if datefmt:
+            return dt.strftime(datefmt)
+        return dt.strftime("%Y-%m-%d %H:%M:%S")
 
     def format(self, record):
         levelname = record.levelname
@@ -82,7 +93,7 @@ def setup_logger(name: str = "prismia") -> logging.Logger:
             encoding='utf-8'
         )
         file_handler.setLevel(logging.DEBUG)
-        file_handler.setFormatter(logging.Formatter(detailed_format))
+        file_handler.setFormatter(ColoredFormatter(detailed_format))
         logger.addHandler(file_handler)
     except Exception as e:
         logger.warning(f"Не удалось настроить файловое логирование: {e}")

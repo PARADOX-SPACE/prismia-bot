@@ -22,7 +22,7 @@ async def on_command(ctx):
         return
 
     # Получаем текущее время
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    current_time = datetime.now(env_cfg.MOSCOW_TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")
 
 
     # Определяем, был ли вызов команды в ЛС или в канале сервера
