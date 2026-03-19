@@ -1,25 +1,10 @@
-from datetime import datetime, timezone
-
 import aiohttp
 from disnake import Embed
 
 from bot_init import bot, env_cfg
+from modules.get_round_duration import get_round_duration
 
 timeout = aiohttp.ClientTimeout(total=5)
-
-def get_round_duration(start_time: str) -> str:
-    try:
-        start = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
-        now = datetime.now(timezone.utc)
-        delta = now - start
-
-        minutes = int(delta.total_seconds() // 60)
-        seconds = int(delta.total_seconds() % 60)
-
-        return f"{minutes}м {seconds}с"
-    except Exception:
-        return "неизвестно"
-
 
 @bot.command(name="status")
 async def status_command(ctx, server: str = "mrp"):
