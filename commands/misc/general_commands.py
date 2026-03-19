@@ -11,7 +11,7 @@ async def ping(ctx):
 
     latency = round(bot.latency * 1000)
     emoji = "🏓" if latency < 100 else "🐢"
-    await ctx.send(f"{emoji} Pong!!! Задержка: **{latency}ms**")
+    await ctx.send(f"{emoji} Pong! Задержка: **{latency}ms**")
 
 
 @bot.slash_command(name="ping", help="Проверяет задержку бота.")
@@ -22,4 +22,4 @@ async def ping_command(interaction: AppCommandInteraction):
 
     latency = round(bot.latency * 1000)
     emoji = "🏓" if latency < 100 else "🐢"
-    await interaction.response.send_message(f"{emoji} Pong!!! Задержка: **{latency}ms**")
+    await interaction.response.send_message(f"{emoji} Pong! Задержка: **{latency}ms**")
