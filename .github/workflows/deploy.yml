@@ -1,1 +1,15 @@
-# init
+name: Deploy via Portainer Webhook
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Call Portainer webhook
+        run: |
+          curl -k -X POST "${{ secrets.PORTAINER_WEBHOOK_URL }}"
