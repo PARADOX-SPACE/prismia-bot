@@ -22,6 +22,9 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
       POST_REQUEST_WATCHDOG: ${POST_REQUEST_WATCHDOG}
 
+    volumes:
+      - ./data:/app/data
+
 networks:
   prismia-net:
     driver: bridge

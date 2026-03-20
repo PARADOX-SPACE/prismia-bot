@@ -9,6 +9,7 @@ from pathlib import Path
 from aiohttp import web
 
 from bot_init import bot, env_cfg, log
+from data import load_data
 from http_server import init_http_server
 
 
@@ -33,6 +34,7 @@ async def run_http_server():
 
 
 async def main():
+    load_data() # Инициализация данных из JSON при запуске
     # Автоматический импорт всех модулей
     load_modules('commands.admin')
     load_modules('commands.discord')
