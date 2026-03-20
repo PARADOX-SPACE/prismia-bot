@@ -117,30 +117,6 @@ async def link_account(ctx, code: str):
     else:
         log.error(f"❌ Роль с ID {env_cfg.DISCORD_VERIFED_ROLE_ID} не найдена на сервере {bot_guild.name}")
 
-
-@bot.command()
-@has_any_role_by_keys("whitelist_role_id_administration_post", "general_adminisration_role")
-async def get_ckey(ctx, discordUser: disnake.Member):
-    """Получить ckey (ник в SS14) пользователя по его Discord."""
-    try:
-        user_id = ss14_db.get_user_id_by_discord_id(str(discordUser.id))
-        if not user_id:
-            await ctx.send(f"❌ Пользователь {discordUser.mention} не привязан к SS14!")
-            return
-
-        userName = ss14_db.get_username_by_user_id(user_id)
-        if not userName:
-            await ctx.send(f"⚠ Никнейм не найден в базе данных.")
-            return
-
-        await ctx.send(
-            f"🔹 **Discord:** {discordUser.name} (ID: {discordUser.id})\n"
-            f"🔹 **SS14 ник:** `{userName}`"
-        )
-    except Exception as e:
-        await ctx.send(f"🚫 Ошибка при получении данных: `{str(e)}`")
-        raise
-
 @bot.slash_command(name="dis_link", description="(АДМИН) Привязывает игрового пользователя к Discord.", guild_ids=[env_cfg.GUILD_DISCORD_SERVER_ID])
 @has_any_role_by_keys("head_team")
 async def link_dis(

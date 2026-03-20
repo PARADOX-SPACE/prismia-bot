@@ -426,6 +426,33 @@ class DatabasePostgreSQLManagerSS14:
                 result = cursor.fetchone()
                 return result[0] if result else None
 
+    def get_discord_id_by_user_id(self, user_id: str, db_name='main'):
+        """
+        Получает Discord ID пользователя по его user_id из игровой базы данных.
+
+        Производит поиск в указанной базе данных в таблице discord_user,
+        возвращая соответствующий Discord ID для заданного user_id.
+
+        Parameters
+        ----------
+        user_id : str
+            Уникальный идентификатор пользователя в игровой базе данных
+            в строковом формате. Пример: "550e8400-e29b-41d4-a716-446655440000"
+        
+        db_name : str, optional
+            Наименование базы данных для поиска, по умолчанию 'main'.
+            Допустимые значения:
+            - 'main' - основная рабочая база данных
+            - 'dev' - база данных для разработки
+        """
+        with self._get_connection(db_name) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute(
+                    "SELECT discord_id FROM discord_user WHERE user_id = %s", 
+                    (user_id,))
+                result = cursor.fetchone()
+                return result[0] if result else None
+
     def is_admin(self, user_id: int, db_name='main'):
         """
         Проверяет наличие административных прав у пользователя.
