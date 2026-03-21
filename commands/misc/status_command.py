@@ -59,7 +59,7 @@ async def status_command(ctx, server: str = "mrp"):
                 )
 
                 embed.add_field(
-                    name="Состояние",
+                    name="Время раунда",
                     value=round_time,
                     inline=False
                 )
