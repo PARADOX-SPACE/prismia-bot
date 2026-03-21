@@ -22,8 +22,8 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
       POST_REQUEST_WATCHDOG: ${POST_REQUEST_WATCHDOG}
 
-    # volumes: # Раскоментить если нужно сохранение data при пересборке контейнера
-    #   - ./data:/app/data
+    volumes:
+      - ./data:/app/data
 
 networks:
   prismia-net:
