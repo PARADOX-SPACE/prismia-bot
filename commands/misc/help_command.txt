@@ -1,0 +1,51 @@
+# from disnake import Embed, AppCommandInteraction
+# from disnake.ext import commands
+# from bot_init import bot
+
+# HELP_DATA = {
+#     "title": "📚 Помощь по командам",
+#     "sections": [
+#         {
+#             "name": "Основные команды:",
+#             "content": (
+#                 "❓ &help - Показать это сообщение.\n"
+#             )
+#         },
+#         {
+#             "name": "Доп. возможности:",
+#             "content": (
+
+#                 "Примеры:\n\"..[n213]..\"\n\"..[o3]..\""
+#             )
+#         },
+#         {
+#             "name": "Доп. информация:",
+#             "content": "✨ Если у вас есть вопросы или нужна помощь, обращайтесь к создателю: Шрёдька :з 🖤👾"
+#         },
+#         {
+#             "name": "Разработчики:",
+#             "content": "👨‍💻 Автор: schrodinger71\n"
+#         },
+#         {
+#             "name": "Репозиторий бота:",
+#             "content": "https://github.com/"
+#         }
+#     ]
+# }
+
+# # ---------------- TEXT COMMAND ----------------
+# @bot.command(name="help", help="Показывает помощь по командам.")
+# async def help_text(ctx: commands.Context):
+#     embed = Embed(title=HELP_DATA["title"], color=0x00ff00)
+#     for section in HELP_DATA["sections"]:
+#         embed.add_field(name=section["name"], value=section["content"], inline=False)
+#     await ctx.send(embed=embed)
+
+# # ---------------- SLASH COMMAND ----------------
+# @bot.slash_command(name="help", description="Показывает помощь по командам.")
+# async def help_slash(interaction: AppCommandInteraction):
+#     embed = Embed(title=HELP_DATA["title"], color=0x00ff00) 
+#     Color = #3232323
+#     for section in HELP_DATA["sections"]:
+#         embed.add_field(name=section["name"], value=section["content"], inline=False)
+#     await interaction.response.send_message(embed=embed)
