@@ -31,7 +31,7 @@ class ENVIRONMENT_VAR:
     MOSCOW_TIMEZONE = pytz.timezone("Europe/Moscow")
     DISCORD_VERIFED_ROLE_ID = 1475930788225876212
     MY_USER_ID = 328502766622474240
-    IP_HOST = "83.222.20.3"
+    IP_HOST = "144.31.109.124"
     NAME_INST = "paradox-inst"
     
     def __new__(cls):
